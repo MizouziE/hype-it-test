@@ -1,7 +1,5 @@
 <?php
 
-require __DIR__ . '/../config/database.php';
-
 const DEFAULT_VALIDATION_ERRORS = [
     'required' => 'Please enter the %s',
     'email' => 'The %s is not a valid email address',
