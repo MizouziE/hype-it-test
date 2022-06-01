@@ -34,16 +34,16 @@ require __DIR__ . '/../src/register.php';
     </div>
 
     <div>
-        <label for="agree">
-            <input type="checkbox" name="agree" id="agree" value="checked" <?= $inputs['agree'] ?? '' ?> /> I
+        <label for="agree"> I
             agree
             with the
-            <a href="#" title="term of services">term of services</a>
+            <a href="#" title="terms of services">terms of services</a>
         </label>
+            <input type="checkbox" name="agree" id="agree" value="checked" <?= $inputs['agree'] ?? '' ?> />
         <small><?= $errors['agree'] ?? '' ?></small>
     </div>
 
-    <button type="submit">Register</button>
+    <button class="btn" type="submit">Register</button>
 
     <footer>Already a member? <a href="login.php">Login here</a></footer>
 
