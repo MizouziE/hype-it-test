@@ -16,60 +16,60 @@ const DEFAULT_VALIDATION_ERRORS = [
 
 
 /**
-* Validate
-* @param array $data
-* @param array $fields
-* @param array $messages
-* @return array
-*/
+ * Validate
+ * @param array $data
+ * @param array $fields
+ * @param array $messages
+ * @return array
+ */
 function validate(array $data, array $fields, array $messages = []): array
 {
-// Split the array by a separator, trim each element
-// and return the array
-$split = fn($str, $separator) => array_map('trim', explode($separator, $str));
+    // Split the array by a separator, trim each element
+    // and return the array
+    $split = fn ($str, $separator) => array_map('trim', explode($separator, $str));
 
-// get the message rules
-$rule_messages = array_filter($messages, fn($message) => is_string($message));
+    // get the message rules
+    $rule_messages = array_filter($messages, fn ($message) => is_string($message));
 
-// overwrite the default message
-$validation_errors = array_merge(DEFAULT_VALIDATION_ERRORS, $rule_messages);
+    // overwrite the default message
+    $validation_errors = array_merge(DEFAULT_VALIDATION_ERRORS, $rule_messages);
 
-$errors = [];
+    $errors = [];
 
-foreach ($fields as $field => $option) {
+    foreach ($fields as $field => $option) {
 
-$rules = $split($option, '|');
+        $rules = $split($option, '|');
 
-foreach ($rules as $rule) {
-// get rule name params
-$params = [];
-// if the rule has parameters e.g., min: 1
-if (strpos($rule, ':')) {
-[$rule_name, $param_str] = $split($rule, ':');
-$params = $split($param_str, ',');
-} else {
-$rule_name = trim($rule);
-}
-// by convention, the callback should be is_<rule> e.g.,is_required
-    $fn = 'is_' . $rule_name;
+        foreach ($rules as $rule) {
+            // get rule name params
+            $params = [];
+            // if the rule has parameters e.g., min: 1
+            if (strpos($rule, ':')) {
+                [$rule_name, $param_str] = $split($rule, ':');
+                $params = $split($param_str, ',');
+            } else {
+                $rule_name = trim($rule);
+            }
+            // by convention, the callback should be is_<rule> e.g.,is_required
+            $fn = 'is_' . $rule_name;
 
-    if (is_callable($fn)) {
-    $pass = $fn($data, $field, ...$params);
-    if (!$pass) {
-    // get the error message for a specific field and rule if exists
-    // otherwise get the error message from the $validation_errors
-    $errors[$field] = sprintf(
-    $messages[$field][$rule_name] ?? $validation_errors[$rule_name],
-    $field,
-    ...$params
-    );
-    }
-    }
-    }
+            if (is_callable($fn)) {
+                $pass = $fn($data, $field, ...$params);
+                if (!$pass) {
+                    // get the error message for a specific field and rule if exists
+                    // otherwise get the error message from the $validation_errors
+                    $errors[$field] = sprintf(
+                        $messages[$field][$rule_name] ?? $validation_errors[$rule_name],
+                        $field,
+                        ...$params
+                    );
+                }
+            }
+        }
     }
 
     return $errors;
-    }
+}
 
 function is_required(array $data, string $field): bool
 {
@@ -143,28 +143,6 @@ function is_secure(array $data, string $field): bool
 
     $pattern = "#.*^(?=.{8,64})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$#";
     return preg_match($pattern, $data[$field]);
-}
-
-/**
- * Connect to the database and returns an instance of PDO class
- * or false if the connection fails
- *
- * @return PDO
- */
-function db(): PDO
-{
-    static $pdo;
-    // if the connection is not initialized
-    // connect to the database
-    if (!$pdo) {
-        return new PDO(
-            sprintf("mysql:host=%s;dbname=%s;charset=UTF8", DB_HOST, DB_NAME),
-            DB_USER,
-            DB_PASSWORD,
-            [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-        );
-    }
-    return $pdo;
 }
 
 /**

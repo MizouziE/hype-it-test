@@ -38,3 +38,23 @@ function redirect_with(string $url, array $items): void
 
     redirect_to($url);
 }
+
+function redirect_with_message(string $url, string $message, string $type = FLASH_SUCCESS)
+{
+    flash('flash_' . uniqid(), $message, $type);
+    redirect_to($url);
+}
+
+function session_flash(...$keys): array
+{
+    $data = [];
+    foreach ($keys as $key) {
+        if (isset($_SESSION[$key])) {
+            $data[] = $_SESSION[$key];
+            unset($_SESSION[$key]);
+        } else {
+            $data[] = [];
+        }
+    }
+    return $data;
+}
