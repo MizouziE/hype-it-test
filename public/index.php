@@ -5,7 +5,7 @@ require_login();
 
 <?php view('header', ['title' => 'User Dashboard']) ?>
 
-<p>Welcome <?= current_user() ?>, you made it! <br><a href="logout.php">Logout</a></p>
+<p>Welcome <?= current_user() ?>, you made it!</p> <br><a href="logout.php">Logout</a>
 
 <h2>List of Users:</h2>
 <div class="">
