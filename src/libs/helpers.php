@@ -58,3 +58,23 @@ function session_flash(...$keys): array
     }
     return $data;
 }
+
+function is_user_logged_in(): bool
+{
+    return isset($_SESSION['username']);
+}
+
+function require_login(): void
+{
+    if (!is_user_logged_in()) {
+        redirect_to('login.php');
+    }
+}
+
+function current_user()
+{
+    if (is_user_logged_in()) {
+        return $_SESSION['username'];
+    }
+    return null;
+}
