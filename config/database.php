@@ -1,16 +1,15 @@
 <?php
 
-$sname = "db";
+const DB_HOST = 'db';
+const DB_NAME = 'developer';
+const DB_USER = 'developer';
+const DB_PASSWORD = 'developer';
 
-$uname = "developer";
-
-$password = "developer";
-
-$db_name = "developer";
-
-$conn = mysqli_connect($sname, $uname, $password, $db_name, 3306);
-
-if (!$conn) {
-
-    echo "Connection failed!";
+function db()
+{
+    static $pdo;
+    if (!$pdo) {
+        $pdo = connect(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
+    }
+    return $pdo;
 }
